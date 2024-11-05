@@ -5,7 +5,7 @@ module lif(
     input wire          clk,
     input wire          reset_n,
     output reg [7:0]    state,
-    output wire         spike,
+    output wire         spike
 );
 
     wire [7:0] next_state;
