@@ -9,7 +9,6 @@ module lif(
 );
 
     wire [7:0] next_state;
-    //wire [7:0] delta;
     //reg [7:0] beta;
 
     always @(posedge clk) begin

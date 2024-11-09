@@ -12,7 +12,6 @@ module tt_um_delta_liafn (
 );
 
   // All output pins must be assigned. If not used, assign to 0.
-  //assign uio_out [7:0] = 0;
   assign uio_oe = 8'b11111111;
 
   // List all unused inputs to prevent warnings
@@ -21,7 +20,7 @@ module tt_um_delta_liafn (
   // Delta threshold for spiking
   wire [7:0] delta_threshold = 8'd50;
 
-  // Beta value for leaky integration
+  // Implement Beta value for leaky integration later
   // This value will be multiplied by the state and added to the input current to update the state of the lif
   //wire [7:0] beta = 8'd128; 
 
@@ -34,8 +33,7 @@ module tt_um_delta_liafn (
   wire spike;
 
   // TOP MODULE LOGIC
-  // flow output of lif into reg to store output state
-  // should I put the input of the lif to be the U_i+1 = Beta*u_i + I_in?
+  // flow output of lif into reg to update current state
   lif lif_inst (.current(ui_in), .clk(clk), .reset_n(rst_n), .spike(spike), .state(state));
 
   // Instantiate the register to hold the previous state
@@ -44,19 +42,17 @@ module tt_um_delta_liafn (
   // Compare the previous and current states
   assign diff = state - prev_state;
 
-  // Get absolute difference
+  // Get absolute difference since it is signed
   assign abs_diff = (diff < 0) ? -diff : diff;
 
-  // Check if difference exceeds delta threshold and set spike
+  // Check if difference exceeds delta threshold and set spike if it does
   assign spike = (abs_diff >= {1'b0, delta_threshold});
 
   // Output the difference if there is a spike, else pass zero
-  // check if this line of code implements the mux logic correctly
   assign difference = spike ? abs_diff[7:0] : 8'b00000000;
 
   // Connect outputs for testing and debugging
   assign uio_out = difference; // Output the difference on uio_out
   assign uo_out = state;       // Output the current state on uo_out
-
 
 endmodule
