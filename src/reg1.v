@@ -1,34 +1,28 @@
 `default_nettype none
 
-module lif(
+module reg1(
     input wire [7:0]    current,
     input wire          clk,
     input wire          reset_n,
-    output reg [7:0]    state,
-    output wire         spike
+    output reg [7:0]    state
 );
 
     wire [7:0] next_state;
-    reg [7:0] threshold;
+    //wire [7:0] delta;
     //reg [7:0] beta;
 
     always @(posedge clk) begin
 
         if (!reset_n) begin
             state <= 0;
-            threshold <= 200;
-            //beta <= 10;
         end else begin
             state <= next_state;
         end
     end
     
     // next state logic
-    // remember: 0 < beta < 1
-    // shift state to the right by one
-    assign next_state = current + (spike ? 0: (state >> 1));
+    assign next_state = current + (state >> 1); // Leaky integration
 
-    // spiking logic
-    assign spike = (state >= threshold);
+    // should I update next state here? with the following equation U_i+1 = Beta*u_i + I_in?
 
 endmodule
