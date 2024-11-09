@@ -48,7 +48,7 @@ module tt_um_delta_liafn (
   assign abs_diff = (diff < 0) ? -diff : diff;
 
   // Check if difference exceeds delta threshold and set spike
-  assign spike = (abs_diff >= delta_threshold);
+  assign spike = (abs_diff >= {1'b0, delta_threshold});
 
   // Output the difference if there is a spike, else pass zero
   // check if this line of code implements the mux logic correctly
