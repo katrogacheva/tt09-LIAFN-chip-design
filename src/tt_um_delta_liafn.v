@@ -12,8 +12,8 @@ module tt_um_delta_liafn (
 );
 
   // All output pins must be assigned. If not used, assign to 0.
-  assign uio_out [7:0] = 0;
-  assign uio_oe  = 1;
+  //assign uio_out [7:0] = 0;
+  assign uio_oe = 8'b11111111;
 
   // List all unused inputs to prevent warnings
   wire _unused = &{ena, uio_in, 1'b0};
@@ -46,10 +46,11 @@ module tt_um_delta_liafn (
 
   // Check if absolute difference exceeds delta threshold and set spike
   assign spike = (diff >= delta_threshold);
-xw
+
   // Output the difference if there is a spike, else pass zero
   // check if this line of code implements the mux logic correctly
-  assign difference = spike ? diff[7:0]: 8'b00000000;
+  wire [7:0] difference = spike ? diff[7:0] : 8'b00000000;
+
 
   // Connect outputs for testing and debugging
   assign uio_out = difference; // Output the difference on uio_out
