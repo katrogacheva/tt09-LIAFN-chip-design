@@ -30,7 +30,7 @@ module tt_um_delta_liafn (
   wire [7:0] prev_state;
   wire signed [8:0] diff;         // 9-bit to handle overflow
   //wire [8:0] abs_diff;
-  reg [7:0] difference;
+  wire [7:0] difference;
   wire spike;
 
   // TOP MODULE LOGIC
@@ -49,7 +49,7 @@ module tt_um_delta_liafn (
 
   // Output the difference if there is a spike, else pass zero
   // check if this line of code implements the mux logic correctly
-  wire [7:0] difference = spike ? diff[7:0] : 8'b00000000;
+  assign difference = spike ? diff[7:0] : 8'b00000000;
 
 
   // Connect outputs for testing and debugging
