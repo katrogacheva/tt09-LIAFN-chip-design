@@ -4,6 +4,7 @@ module reg1(
     input wire [7:0]    current,
     input wire          clk,
     input wire          reset_n,
+    input wire          spike,
     output reg [7:0]    state
 );
 
@@ -21,8 +22,6 @@ module reg1(
     end
     
     // next state logic
-    assign next_state = current + (state >> 1); // Leaky integration
-
-    // should I update next state here? with the following equation U_i+1 = Beta*u_i + I_in?
+    assign next_state = current + (spike ? 0: (state >> 1));
 
 endmodule

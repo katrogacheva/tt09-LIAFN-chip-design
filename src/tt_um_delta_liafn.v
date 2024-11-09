@@ -36,7 +36,7 @@ module tt_um_delta_liafn (
   // TOP MODULE LOGIC
   // flow output of lif into reg to store output state
   // should I put the input of the lif to be the U_i+1 = Beta*u_i + I_in?
-  reg1 lif_inst (.current(ui_in), .clk(clk), .reset_n(rst_n), .state(state));
+  reg1 lif_inst (.current(ui_in), .clk(clk), .reset_n(rst_n), .spike(spike), .state(state));
 
   // Instantiate the register to hold the previous state
   reg2 reg_state_store (.state(state), .clk(clk), .reset_n(rst_n), .prev_state(prev_state));
@@ -50,7 +50,6 @@ module tt_um_delta_liafn (
   // Output the difference if there is a spike, else pass zero
   // check if this line of code implements the mux logic correctly
   assign difference = spike ? diff[7:0] : 8'b00000000;
-
 
   // Connect outputs for testing and debugging
   assign uio_out = difference; // Output the difference on uio_out
