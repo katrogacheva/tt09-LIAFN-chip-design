@@ -1,6 +1,6 @@
 `default_nettype none
 
-module reg2(
+module reg_state_store(
     input wire [7:0]    state,
     input wire          clk,
     input wire          reset_n,

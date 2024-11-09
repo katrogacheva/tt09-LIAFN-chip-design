@@ -29,23 +29,26 @@ module tt_um_delta_liafn (
   wire [7:0] state;
   wire [7:0] prev_state;
   wire signed [8:0] diff;         // 9-bit to handle overflow
-  //wire [8:0] abs_diff;
+  wire [8:0] abs_diff;
   wire [7:0] difference;
   wire spike;
 
   // TOP MODULE LOGIC
   // flow output of lif into reg to store output state
   // should I put the input of the lif to be the U_i+1 = Beta*u_i + I_in?
-  reg1 lif_inst (.current(ui_in), .clk(clk), .reset_n(rst_n), .spike(spike), .state(state));
+  lif lif_inst (.current(ui_in), .clk(clk), .reset_n(rst_n), .spike(spike), .state(state));
 
   // Instantiate the register to hold the previous state
-  reg2 reg_state_store (.state(state), .clk(clk), .reset_n(rst_n), .prev_state(prev_state));
+  reg_state_store store (.state(state), .clk(clk), .reset_n(rst_n), .prev_state(prev_state));
 
   // Compare the previous and current states
   assign diff = state - prev_state;
 
-  // Check if absolute difference exceeds delta threshold and set spike
+  // Check if difference exceeds delta threshold and set spike
   assign spike = (diff >= delta_threshold);
+
+  // Get absolute difference
+
 
   // Output the difference if there is a spike, else pass zero
   // check if this line of code implements the mux logic correctly
