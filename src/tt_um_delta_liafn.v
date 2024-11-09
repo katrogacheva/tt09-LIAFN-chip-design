@@ -19,7 +19,7 @@ module tt_um_delta_liafn (
   wire _unused = &{ena, uio_in, 1'b0};
 
   // Delta threshold for spiking
-  wire [7:0] delta_threshold = 8'd10;
+  wire [7:0] delta_threshold = 8'd50;
 
   // Beta value for leaky integration
   // This value will be multiplied by the state and added to the input current to update the state of the lif
@@ -44,15 +44,15 @@ module tt_um_delta_liafn (
   // Compare the previous and current states
   assign diff = state - prev_state;
 
-  // Check if difference exceeds delta threshold and set spike
-  assign spike = (diff >= delta_threshold);
-
   // Get absolute difference
+  assign abs_diff = (diff < 0) ? -diff : diff;
 
+  // Check if difference exceeds delta threshold and set spike
+  assign spike = (abs_diff >= delta_threshold);
 
   // Output the difference if there is a spike, else pass zero
   // check if this line of code implements the mux logic correctly
-  assign difference = spike ? diff[7:0] : 8'b00000000;
+  assign difference = spike ? abs_diff[7:0] : 8'b00000000;
 
   // Connect outputs for testing and debugging
   assign uio_out = difference; // Output the difference on uio_out
