@@ -19,12 +19,6 @@ async def test_project(dut):
     await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1     # exit reset
     
-    # Provide stimulus into circuit - current input
-    # dut.ui_in.value = 0
-    # await ClockCycles(dut.clk, 10)
-    # dut.ui_in.value = 120
-    # await ClockCycles(dut.clk, 100)
-    
     # Test Case 1: Initial state, input of 0 (no input current)
     dut.ui_in.value = 0  # No input current
     await ClockCycles(dut.clk, 10)
