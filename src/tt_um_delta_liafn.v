@@ -12,24 +12,24 @@ module tt_um_delta_liafn (
 );
 
   // All output pins must be assigned. If not used, assign to 0.
-  assign uio_out [6:0] = 0;
+  assign uio_out [7:0] = 0;
   assign uio_oe  = 1;
 
   // List all unused inputs to prevent warnings
-  //wire _unused = &{ena, uio_in, 1'b0};
+  wire _unused = &{ena, uio_in, 1'b0};
 
   // Delta threshold for spiking
   wire [7:0] delta_threshold = 8'd10;
 
   // Beta value for leaky integration
   // This value will be multiplied by the state and added to the input current to update the state of the lif
-  wire [7:0] beta = 8'd128; 
+  //wire [7:0] beta = 8'd128; 
 
   // Intermediate signals
   wire [7:0] state;
   wire [7:0] prev_state;
   wire signed [8:0] diff;         // 9-bit to handle overflow
-  wire [8:0] abs_diff;
+  //wire [8:0] abs_diff;
   reg [7:0] difference;
   wire spike;
 
@@ -46,7 +46,7 @@ module tt_um_delta_liafn (
 
   // Check if absolute difference exceeds delta threshold and set spike
   assign spike = (diff >= delta_threshold);
-
+xw
   // Output the difference if there is a spike, else pass zero
   // check if this line of code implements the mux logic correctly
   assign difference = spike ? diff[7:0]: 8'b00000000;
