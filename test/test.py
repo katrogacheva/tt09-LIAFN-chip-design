@@ -19,7 +19,8 @@ async def test_project(dut):
     await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1     # exit reset
     
-    # Test Case 1: Initial state, input of 0 (no input current), states should be zero and there should be no difference
+    # Test Case 1: Initial state, input of 0 (no input current), states should be zero and there 
+    # should be no difference in states so final Uio_out should be 0
     dut.ui_in.value = 0  # No input current
     await ClockCycles(dut.clk, 10)
     dut._log.info(f"State after no input current: uo_out = {dut.uo_out.value}, uio_out (difference) = {dut.uio_out.value}")
@@ -27,12 +28,14 @@ async def test_project(dut):
     assert dut.uio_out.value == 0, "Expected difference output to be zero after no input current"
     await ClockCycles(dut.clk, 10)
 
-    # Test Case 2: Apply input current and check state increase, this is lower than the threshold so the difference should not trigger a spike
-    dut.ui_in.value = 50  # Apply a constant input
+    # Test Case 2: The input current goes from 0 to 50 there is one initial spike when the difference 
+    # between the states is 50, then both states converge to the same value so the final difference is zero
+    dut.ui_in.value = 50
     await ClockCycles(dut.clk, 20)
     dut._log.info(f"State after applying current of 50: uo_out = {dut.uo_out.value}, uio_out (difference) = {dut.uio_out.value}")
     assert dut.uo_out.value.integer > 0, "Expected state to increase with input current"
-    assert dut.uio_out.value == 0, "Expected no difference output before spike"
+    assert dut.uio_out.value == 0, "Expected difference to be 50 before spike and 0 after"
+    
 
     # Test Case 3: Apply a larger current and check for spike behavior, spike should be triggered by larger difference
     dut.ui_in.value = 120  # Increase the input to trigger a spike condition
